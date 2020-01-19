@@ -1,5 +1,6 @@
 package kata.supermarket;
 
+import kata.supermarket.discounts.BuyThreeForTwoDiscount;
 import kata.supermarket.discounts.Discount;
 import kata.supermarket.discounts.BuyOneGetOneFreeDiscount;
 import kata.supermarket.discounts.TwoForOnePoundDiscount;
@@ -11,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static kata.supermarket.TestedItems.*;
@@ -50,7 +52,8 @@ public class BasketTest {
     static Stream<Arguments> basketProvidesTotalDiscountedValue() {
         return Stream.of(
                 buyOneGetOneFreeDiscountedItems(),
-                twoForOnePoundDiscountedItems()
+                twoForOnePoundDiscountedItems(),
+                threeForTwoDiscountedItems()
         );
     }
 
@@ -78,8 +81,15 @@ public class BasketTest {
                 Arrays.asList(aPintOfMilk(), aPintOfMilk()), Arrays.asList(new BuyOneGetOneFreeDiscount(aPintOfMilk())));
     }
     private static Arguments twoForOnePoundDiscountedItems() {
+        List<Item> items = Arrays.asList(aPackOfDigestives(), aPackOfDigestives());
         return Arguments.of("two items for £1 discount", "1.00",
-                Arrays.asList(aPackOfDigestives(), aPackOfDigestives()), Arrays.asList(new TwoForOnePoundDiscount(aPackOfDigestives(), aPackOfDigestives())));
+                items, Arrays.asList(new TwoForOnePoundDiscount(aPackOfDigestives(), aPackOfDigestives())));
+    }
+
+    private static Arguments threeForTwoDiscountedItems() {
+        List<Item> items = Arrays.asList(aPackOfDigestives(), aPintOfMilk(), aPackOfDigestives());
+        return Arguments.of("3 for 2 discount", "3.10",
+                items, Arrays.asList(new BuyThreeForTwoDiscount(items )));
     }
 
     private static Arguments noItems() {
