@@ -4,11 +4,11 @@ import kata.supermarket.Item;
 
 import java.math.BigDecimal;
 
-public class TwoForOneDiscount implements Discount {
+public class BuyOneGetOneFreeDiscount implements Discount {
 
     private final Item discountedItem;
 
-    public TwoForOneDiscount(Item discountedItem) {
+    public BuyOneGetOneFreeDiscount(Item discountedItem) {
         this.discountedItem = discountedItem;
     }
 

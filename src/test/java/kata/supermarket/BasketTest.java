@@ -1,7 +1,8 @@
 package kata.supermarket;
 
 import kata.supermarket.discounts.Discount;
-import kata.supermarket.discounts.TwoForOneDiscount;
+import kata.supermarket.discounts.BuyOneGetOneFreeDiscount;
+import kata.supermarket.discounts.TwoForOnePoundDiscount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import static kata.supermarket.UtilitiesCommon.*;
+import static kata.supermarket.TestedItems.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BasketTest {
@@ -48,7 +49,8 @@ public class BasketTest {
 
     static Stream<Arguments> basketProvidesTotalDiscountedValue() {
         return Stream.of(
-                twoForOneDiscountedItems()
+                buyOneGetOneFreeDiscountedItems(),
+                twoForOnePoundDiscountedItems()
         );
     }
 
@@ -71,9 +73,13 @@ public class BasketTest {
         return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(aPintOfMilk()));
     }
 
-    private static Arguments twoForOneDiscountedItems() {
-        return Arguments.of("multiple items with 2 for 1 discount", "0.49",
-                Arrays.asList(aPintOfMilk(), aPintOfMilk()), Arrays.asList(new TwoForOneDiscount(aPintOfMilk())));
+    private static Arguments buyOneGetOneFreeDiscountedItems() {
+        return Arguments.of("multiple items with Buy 1 get 1 free discount", "0.49",
+                Arrays.asList(aPintOfMilk(), aPintOfMilk()), Arrays.asList(new BuyOneGetOneFreeDiscount(aPintOfMilk())));
+    }
+    private static Arguments twoForOnePoundDiscountedItems() {
+        return Arguments.of("two items for £1 discount", "1.00",
+                Arrays.asList(aPackOfDigestives(), aPackOfDigestives()), Arrays.asList(new TwoForOnePoundDiscount(aPackOfDigestives(), aPackOfDigestives())));
     }
 
     private static Arguments noItems() {

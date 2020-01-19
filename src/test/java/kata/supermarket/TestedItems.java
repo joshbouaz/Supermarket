@@ -2,13 +2,13 @@ package kata.supermarket;
 
 import java.math.BigDecimal;
 
-public class UtilitiesCommon {
+public class TestedItems {
 
     public static Item aPintOfMilk() {
         return new Product(new BigDecimal("0.49")).oneOf();
     }
 
-    static Item aPackOfDigestives() {
+    public static Item aPackOfDigestives() {
         return new Product(new BigDecimal("1.55")).oneOf();
     }
 

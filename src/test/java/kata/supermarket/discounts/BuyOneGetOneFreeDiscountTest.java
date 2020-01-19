@@ -9,20 +9,20 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
-import static kata.supermarket.UtilitiesCommon.aPintOfMilk;
+import static kata.supermarket.TestedItems.aPintOfMilk;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TwoForOneDiscountTest {
+class BuyOneGetOneFreeDiscountTest {
 
-    @DisplayName("two for one discount provides correct discount for...")
+    @DisplayName("Buy 1 get 1 free discount provides correct discount for...")
     @MethodSource
     @ParameterizedTest(name = "{0}")
-    void basketProvidesTotalValue(String description, String expectedDiscount, Item item) {
-        final TwoForOneDiscount discount = new TwoForOneDiscount(item);
+    void discountIsCorrectlyCalculated(String description, String expectedDiscount, Item item) {
+        final BuyOneGetOneFreeDiscount discount = new BuyOneGetOneFreeDiscount(item);
         assertEquals(new BigDecimal(expectedDiscount), discount.applyDiscount());
     }
 
-    static Stream<Arguments> basketProvidesTotalValue() {
+    static Stream<Arguments> discountIsCorrectlyCalculated() {
         return Stream.of(
                 Arguments.of("no items", "0", null),
                Arguments.of("one item by unit", "0.49", aPintOfMilk())
