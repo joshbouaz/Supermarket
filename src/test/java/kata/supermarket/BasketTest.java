@@ -1,5 +1,7 @@
 package kata.supermarket;
 
+import kata.supermarket.discounts.Discount;
+import kata.supermarket.discounts.TwoForOneDiscount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,9 +12,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+import static kata.supermarket.UtilitiesCommon.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BasketTest {
+public class BasketTest {
 
     @DisplayName("basket provides its total value when containing...")
     @MethodSource
@@ -30,6 +33,22 @@ class BasketTest {
                 multipleItemsPricedPerUnit(),
                 aSingleItemPricedByWeight(),
                 multipleItemsPricedByWeight()
+        );
+    }
+
+    @DisplayName("basket provides its total value when containing...")
+    @MethodSource
+    @ParameterizedTest(name = "{0}")
+    void basketProvidesTotalDiscountedValue(String description, String expectedTotal, Iterable<Item> items, Iterable<Discount> discounts) {
+        final Basket basket = new Basket();
+        items.forEach(basket::add);
+        discounts.forEach(basket::addDiscount);
+        assertEquals(new BigDecimal(expectedTotal), basket.total());
+    }
+
+    static Stream<Arguments> basketProvidesTotalDiscountedValue() {
+        return Stream.of(
+                twoForOneDiscountedItems()
         );
     }
 
@@ -52,31 +71,14 @@ class BasketTest {
         return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(aPintOfMilk()));
     }
 
+    private static Arguments twoForOneDiscountedItems() {
+        return Arguments.of("multiple items with 2 for 1 discount", "0.49",
+                Arrays.asList(aPintOfMilk(), aPintOfMilk()), Arrays.asList(new TwoForOneDiscount(aPintOfMilk())));
+    }
+
     private static Arguments noItems() {
         return Arguments.of("no items", "0.00", Collections.emptyList());
     }
 
-    private static Item aPintOfMilk() {
-        return new Product(new BigDecimal("0.49")).oneOf();
-    }
 
-    private static Item aPackOfDigestives() {
-        return new Product(new BigDecimal("1.55")).oneOf();
-    }
-
-    private static WeighedProduct aKiloOfAmericanSweets() {
-        return new WeighedProduct(new BigDecimal("4.99"));
-    }
-
-    private static Item twoFiftyGramsOfAmericanSweets() {
-        return aKiloOfAmericanSweets().weighing(new BigDecimal(".25"));
-    }
-
-    private static WeighedProduct aKiloOfPickAndMix() {
-        return new WeighedProduct(new BigDecimal("2.99"));
-    }
-
-    private static Item twoHundredGramsOfPickAndMix() {
-        return aKiloOfPickAndMix().weighing(new BigDecimal(".2"));
-    }
 }
